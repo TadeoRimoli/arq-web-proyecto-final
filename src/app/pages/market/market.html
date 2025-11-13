@@ -1,0 +1,22 @@
+<h2 class="text-2xl font-bold mb-4">Mercado Crypto (Binance)</h2>
+
+<div *ngIf="loading">Cargando...</div>
+
+<table *ngIf="!loading" class="w-full border-collapse border border-gray-200">
+  <thead class="bg-gray-100">
+    <tr>
+      <th class="p-2 text-left">Símbolo</th>
+      <th class="p-2 text-right">Precio (USDT)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of prices" class="border-b hover:bg-gray-50">
+      <td class="p-2">
+        <a [routerLink]="['/details', item.symbol]" class="text-blue-600 hover:underline">
+          {{ item.symbol }}
+        </a>
+      </td>
+      <td class="p-2 text-right">{{ item.price | number:'1.2-8' }}</td>
+    </tr>
+  </tbody>
+</table>

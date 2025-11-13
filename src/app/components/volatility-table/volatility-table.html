@@ -1,0 +1,67 @@
+@if (loading) {
+  <div class="flex items-center justify-center py-12">
+    <div class="text-center">
+      <div
+        class="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-yellow-500 border-t-transparent"
+      ></div>
+      <p class="text-sm text-gray-400">Cargando volatilidad...</p>
+    </div>
+  </div>
+} @else {
+  <div class="space-y-6">
+    <header>
+      <h2 class="text-2xl font-semibold tracking-tight text-white">
+        Criptomonedas más volátiles
+      </h2>
+      <p class="text-sm text-gray-400">
+        Ranking basado en la variación absoluta del precio en las últimas 24 horas
+      </p>
+    </header>
+
+    <div class="overflow-x-auto rounded-lg border border-gray-800 shadow-sm shadow-black/20">
+      <table class="min-w-full divide-y divide-gray-800 text-sm">
+        <thead class="bg-gray-900/60 text-xs uppercase tracking-wide text-gray-400">
+          <tr>
+            <th class="p-3 text-left">#</th>
+            <th class="p-3 text-left">Nombre</th>
+            <th class="p-3 text-right">Precio (USD)</th>
+            <th class="p-3 text-right">Cambio 24h</th>
+            <th class="p-3 text-right">Market Cap</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-900 bg-gray-950/70">
+          @for (crypto of cryptos; track crypto.id; let i = $index) {
+            <tr class="hover:bg-gray-900/60 transition-colors">
+              <td class="p-3 font-mono text-gray-400">#{{ i + 1 }}</td>
+              <td class="p-3">
+                <div class="flex items-center gap-3">
+                  <img [src]="crypto.image" alt="{{ crypto.name }}" class="h-7 w-7 rounded-full" />
+                  <div>
+                    <p class="font-medium text-gray-100">{{ crypto.name }}</p>
+                    <p class="text-xs uppercase tracking-wide text-gray-500">{{ crypto.symbol }}</p>
+                  </div>
+                </div>
+              </td>
+              <td class="p-3 text-right font-mono text-gray-200">
+                ${{ crypto.current_price | number: '1.2-2' }}
+              </td>
+              <td
+                class="p-3 text-right font-semibold"
+                [ngClass]="{
+                  'text-green-400': crypto.price_change_percentage_24h > 0,
+                  'text-red-400': crypto.price_change_percentage_24h < 0,
+                  'text-gray-300': crypto.price_change_percentage_24h === 0
+                }"
+              >
+                {{ crypto.price_change_percentage_24h | number: '1.2-2' }}%
+              </td>
+              <td class="p-3 text-right font-mono text-gray-200">
+                ${{ crypto.market_cap | number: '1.0-0' }}
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+}
