@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BinanceService } from '../../services/binance';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-market',
@@ -9,14 +10,15 @@ import { RouterModule } from '@angular/router';
   imports: [CommonModule, RouterModule],
   templateUrl: './market.html'
 })
-export class Market implements OnInit {
+export class Market implements OnInit, OnDestroy {
   prices: any[] = [];
   loading = true;
+  private pricesSub?: Subscription;
 
   constructor(private binance: BinanceService) {}
 
   ngOnInit() {
-    this.binance.getLivePrices(5000).subscribe({
+    this.pricesSub = this.binance.getLivePrices(5000).subscribe({
       next: (data) => {
         this.prices = data.filter(p => p.symbol.endsWith('USDT')).slice(0, 20);
         this.loading = false;
@@ -26,5 +28,9 @@ export class Market implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.pricesSub?.unsubscribe();
   }
 }

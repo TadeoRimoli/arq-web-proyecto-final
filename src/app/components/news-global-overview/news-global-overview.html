@@ -1,14 +1,14 @@
-@if (loading) {
+@if (loading()) {
   <div class="flex h-96 items-center justify-center">
     <div class="text-center">
       <div class="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-yellow-500"></div>
       <p class="text-sm text-gray-400">Cargando datos del mercado global...</p>
     </div>
   </div>
-} @else if (error) {
+} @else if (error()) {
   <div class="flex h-96 items-center justify-center">
     <div class="text-center">
-      <p class="text-sm text-red-500">{{ error }}</p>
+      <p class="text-sm text-red-500">{{ error() }}</p>
     </div>
   </div>
 } @else {

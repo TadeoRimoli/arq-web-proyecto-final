@@ -1,6 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { of } from 'rxjs';
 
 interface Crypto {
   id: string;
@@ -21,7 +22,8 @@ interface Crypto {
 })
 export class VolatilityTable implements OnInit, OnDestroy {
   cryptos: Crypto[] = [];
-  loading = true;
+  loading = signal<boolean>(true);
+  error = signal<string | null>(null);
   private intervalId: any;
 
   constructor(private http: HttpClient) {}
@@ -36,7 +38,8 @@ export class VolatilityTable implements OnInit, OnDestroy {
   }
 
   fetchData() {
-    this.loading = true;
+    this.loading.set(true);
+    this.error.set(null);
     this.http
       .get<Crypto[]>(
         'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false'
@@ -51,12 +54,18 @@ export class VolatilityTable implements OnInit, OnDestroy {
             )
             .slice(0, 20);
           this.cryptos = sorted;
-          this.loading = false;
+          this.loading.set(false);
         },
         error: (err) => {
           console.error('Error fetching data:', err);
-          this.loading = false;
-        },
+          this.loading.set(false);
+          this.error.set(err?.message ?? 'No se pudo obtener la información de las criptomonedas. Intenta nuevamente más tarde.');
+          return of({
+            cryptos: [],
+            loading: false,
+            error: err?.message ?? 'No se pudo obtener la información de las criptomonedas. Intenta nuevamente más tarde.',
+          });
+        }
       });
   }
 }

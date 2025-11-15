@@ -3,9 +3,10 @@ import { NewsGlobalOverview } from '../../components/news-global-overview/news-g
 
 @Component({
   selector: 'app-home',
+  standalone: true,
   imports: [NewsGlobalOverview],
   templateUrl: './home.html',
-  styleUrl: './home.css',
+  styleUrls: ['./home.css'],
 })
 export class Home {
 

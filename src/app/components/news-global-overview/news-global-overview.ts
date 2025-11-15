@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { catchError, forkJoin, interval, map, of, Subscription } from 'rxjs';
@@ -33,8 +33,8 @@ interface FearGreedIndex {
   imports: [CommonModule],
 })
 export class NewsGlobalOverview implements OnInit, OnDestroy {
-  loading = true;
-  error: string | null = null;
+  loading = signal<boolean>(true);
+  error = signal<string | null>(null);
 
   globalData: GlobalData | null = null;
   trendingCoins: TrendingCoin[] = [];
@@ -55,8 +55,8 @@ export class NewsGlobalOverview implements OnInit, OnDestroy {
   }
 
   loadData() {
-    this.loading = true;
-    this.error = null;
+    this.loading.set(true);
+    this.error.set(null);
 
     const global$ = this.http.get<any>('https://api.coingecko.com/api/v3/global').pipe(
       map((response) => {
@@ -112,9 +112,9 @@ export class NewsGlobalOverview implements OnInit, OnDestroy {
       .pipe(
         catchError((err) => {
           console.error('Error fetching overview data', err);
-          this.error =
+          this.error.set(
             err?.message ??
-            'No se pudo obtener la información del mercado. Intenta nuevamente más tarde.';
+            'No se pudo obtener la información del mercado. Intenta nuevamente más tarde.');
           return of({
             global: null,
             trending: [],
@@ -126,7 +126,7 @@ export class NewsGlobalOverview implements OnInit, OnDestroy {
         this.globalData = global;
         this.trendingCoins = trending ?? [];
         this.fearGreedIndex = fearGreed;
-        this.loading = false;
+        this.loading.set(false);
       });
   }
 

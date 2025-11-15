@@ -1,15 +1,31 @@
 <header class="bg-gray-950 text-gray-200 border-b border-gray-800">
-  <div class="max-w-6xl mx-auto px-6 py-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+  <div class="max-w-6xl mx-auto px-8 py-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
     <div>
-      <h1 class="text-xl font-semibold tracking-tight text-white">Mercado Crypto</h1>
-      <p class="text-xs uppercase tracking-wide text-gray-500">Explora métricas y oportunidades del mercado</p>
+      <h1 class="text-xl font-semibold tracking-tight text-white">Visualizador Crypto</h1>
     </div>
-    <nav class="flex flex-wrap gap-3 text-sm font-medium uppercase tracking-wide">
+    <nav class="flex flex-wrap gap-4 text-sm font-medium uppercase tracking-wide">
       <a routerLink="/" routerLinkActive="text-white border-b-2 border-yellow-400" [routerLinkActiveOptions]="{ exact: true }" class="text-gray-400 hover:text-white transition-colors pb-1">Mercado</a>
-      <a routerLink="/volatilidad" routerLinkActive="text-white border-b-2 border-yellow-400" class="text-gray-400 hover:text-white transition-colors pb-1">Tabla de volatilidad</a>
-      <a routerLink="/top-marketcap" routerLinkActive="text-white border-b-2 border-yellow-400" class="text-gray-400 hover:text-white transition-colors pb-1">Top Market Cap (VIVO)</a>
+      <a routerLink="/volatilidad" routerLinkActive="text-white border-b-2 border-yellow-400" class="text-gray-400 hover:text-white transition-colors pb-1">Volatilidad</a>
+      <a routerLink="/top-marketcap" routerLinkActive="text-white border-b-2 border-yellow-400" class="text-gray-400 hover:text-white transition-colors pb-1">Top Cryptos (VIVO)</a>
       <a routerLink="/stablecoins" routerLinkActive="text-white border-b-2 border-yellow-400" class="text-gray-400 hover:text-white transition-colors pb-1">Stablecoins</a>
-      <a routerLink="/about" routerLinkActive="text-white border-b-2 border-yellow-400" class="text-gray-400 hover:text-white transition-colors pb-1">Sobre</a>
     </nav>
+      
+      @if (isAuthorized) {
+       <div class="text-left leading-tight flex flex-row gap-2">
+            <p class="mt-1 inline-flex items-center gap-2 bg-gray-900/80 px-3 py-1 rounded-full border border-gray-700 text-sm font-semibold text-white">
+              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+              {{ user?.username || 'Usuario' }}
+            </p>
+            <p class="text-xs text-gray-400 mt-1">{{ user?.email }}</p>
+        <button 
+          (click)="logout()" 
+          class="ml-4 px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-xs uppercase tracking-wide text-white transition-colors">
+          <span class="flex items-center gap-2">
+            <img src="/logout.svg" color="white" alt="Cerrar sesión" class="w-4 h-4" />
+          </span>
+        </button>
+      </div>
+
+      }
   </div>
 </header>

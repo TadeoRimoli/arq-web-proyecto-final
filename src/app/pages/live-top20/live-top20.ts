@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 
@@ -31,7 +31,7 @@ interface BinanceTickerMsg {
 })
 export class LiveTop20 implements OnInit, OnDestroy {
   cryptos: CGCoin[] = [];
-  loading = true;
+  loading = signal<boolean>(true);
   private ws?: WebSocket;
   private reconnectTimer?: any;
 
@@ -47,7 +47,7 @@ export class LiveTop20 implements OnInit, OnDestroy {
   }
 
   private loadTop20AndConnect(): void {
-    this.loading = true;
+    this.loading.set(true);
     const url =
       'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=20&page=1&sparkline=false';
 
@@ -64,12 +64,12 @@ export class LiveTop20 implements OnInit, OnDestroy {
           price_change_percentage_24h: c.price_change_percentage_24h
         }));
 
-        this.loading = false;
+        this.loading.set(false);
         this.connectBinanceSocket();
       },
       error: (err) => {
         console.error('Error fetching top20 from CoinGecko', err);
-        this.loading = false;
+        this.loading.set(false);
       }
     });
   }
