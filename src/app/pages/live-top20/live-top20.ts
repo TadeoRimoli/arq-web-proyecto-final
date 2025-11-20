@@ -53,7 +53,6 @@ export class LiveTop20 implements OnInit, OnDestroy {
 
     this.http.get<CGCoin[]>(url).subscribe({
       next: (data) => {
-        // normalizamos algunos campos que usaremos
         this.cryptos = data.map((c) => ({
           id: c.id,
           symbol: c.symbol.toUpperCase(),
@@ -75,11 +74,9 @@ export class LiveTop20 implements OnInit, OnDestroy {
   }
 
   private buildStreams(): string[] {
-    // intentamos symbol + USDT. Si un símbolo contiene caracteres raros, lo ignoramos.
     const streams: string[] = [];
     for (const c of this.cryptos) {
       const candidate = `${c.symbol}USDT`.toLowerCase();
-      // símbolo simple: letras y números
       if (/^[a-z0-9]+$/.test(candidate)) {
         streams.push(`${candidate}@ticker`);
       }
@@ -96,7 +93,6 @@ export class LiveTop20 implements OnInit, OnDestroy {
       return;
     }
 
-    // Binance acepta hasta cierto largo, pero 20 streams está OK.
     const streamPath = streams.join('/');
     const url = `wss://stream.binance.com:9443/stream?streams=${streamPath}`;
 
@@ -116,13 +112,11 @@ export class LiveTop20 implements OnInit, OnDestroy {
         const price = parseFloat(d.c);
         const percent = parseFloat(d.P);
 
-        // buscar por symbol (mayúsculas)
         const idx = this.cryptos.findIndex((c) => c.symbol === symbol);
         if (idx !== -1) {
           const updated = { ...this.cryptos[idx] };
           updated.current_price = price;
           updated.price_change_percentage_24h = Number.isFinite(percent) ? percent : updated.price_change_percentage_24h;
-          // actualizar in-place pero re-asignar array para disparar render
           this.cryptos[idx] = updated;
           this.cryptos = [...this.cryptos];
         }

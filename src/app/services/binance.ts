@@ -15,7 +15,6 @@ export class BinanceService {
     return this.http.get(`${this.baseUrl}/ticker/price?symbol=${symbol}`);
   }
 
-  /** Lista de precios de todos los símbolos */
   getAllPrices(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/ticker/price`);
   }

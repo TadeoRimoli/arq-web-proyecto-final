@@ -2,7 +2,6 @@ import { Routes } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { Home } from './pages/home/home';
 import { Market } from './pages/market/market';
-import { Details } from './pages/details/details';
 import { About } from './pages/about/about';
 import { VolatilityTable } from './components/volatility-table/volatility-table';
 import { LiveTop20 } from './pages/live-top20/live-top20';
